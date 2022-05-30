@@ -7,9 +7,7 @@ from pymatgen.io.cif import CifParser
 from pymatgen.io.vasp import Poscar
 
 
-def assign_repeat(
-    cif_path, dst_path=None, poscar_name="POSCAR", repeat_name="repeat.output"
-):
+def assign_repeat(cif_path, dst_path=None, poscar_name=None, repeat_name=None):
 
     # Check existance of files
     if not isinstance(cif_path, Path):
@@ -17,6 +15,18 @@ def assign_repeat(
             cif_path, str
         ), f"Filename neither a String nor a pathlib.Path: {cif_path}"
         cif_path = Path(cif_path)
+
+    # Set defaults for arguments
+    if dst_path is None:
+        dst_path = cif_path.parent
+    else:
+        dst_path = Path(dst_path)
+    if poscar_name is None:
+        poscar_name = "POSCAR"
+    if repeat_name is None:
+        repeat_name = "repeat.output"
+
+    # Check existance of POSCAR and REPEAT
     assert cif_path.is_file(), f"File does not exist: {cif_path}"
     poscar_path = cif_path.parent.joinpath(poscar_name)
     assert poscar_path.is_file(), f"File does not exist: {poscar_path}"
@@ -130,6 +140,34 @@ def assign_repeat(
         new_cif += "{:.6f}  {:.6f}  {:.6f}  ".format(*frac) + f"{charge}\n"
 
     # Write the new CIF
-    if dst_path is None:
-        dst_path = cif_path.parent
     dst_path.joinpath(cif_path.name.replace(".cif", "_repeat.cif")).write_text(new_cif)
+
+
+if __name__ == "__main__":
+    from argparse import ArgumentParser
+
+    ap = ArgumentParser(description="Assigning REPEAT outputs to a new CIF file.")
+    ap.add_argument("cif", type=str, help="path to the CIF of interest")
+    ap.add_argument(
+        "-o",
+        "--outdir",
+        type=str,
+        metavar="OUTPUT_DIR",
+        help="Explicitly provide an output directory.",
+    )
+    ap.add_argument(
+        "-p",
+        "--poscar",
+        type=str,
+        metavar="POSCAR",
+        help="Explicitly provide the name of POSCAR file.",
+    )
+    ap.add_argument(
+        "-r",
+        "--repeat",
+        type=str,
+        metavar="REPEAT",
+        help="Explicitly provide the name of the REPEAT output file.",
+    )
+    args = ap.parse_args()
+    assign_repeat(args.cif, args.outdir, args.poscar, args.repeat)
