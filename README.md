@@ -1,5 +1,7 @@
 # REPEAT-Assigner
 
+A robust code for assigning REPEAT outputs to MOFs. Different checks are implemented to ensure the provided files refers to the same structure; if not, `AssertError` will arise with the appropriate information.
+
 ## Prerequisites
 
 This code is tested with the following packages:
