@@ -40,6 +40,8 @@ example_MOFs/
     ├── POSCAR
     └── repeat.output
 ```
+**Checkout [example_MOFs](./example_MOFs/) for example INPUTs, and [assigned_MOFs](./assigned_MOFs/) for example OUTPUTs.**
+
 
 ## Basic CLI Usage
 
