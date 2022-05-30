@@ -1,0 +1,101 @@
+------PRINTING SOME USEFUL INFO---------
+----------------------------------------
+Real box volume = 23238.918692 bohrs^3 
+----------------------------------------
+Total # of valid grid points = 309221 
+ESP sum over full grid = 1.679711e-04 
+ESP sum over valid grid points = -1.766865e+04 
+Cutoff radius = 15.000000 
+Real space sum cells
+# of cells in 1 direction = 1
+# of cells in 2 direction = 1
+# of cells in 3 direction = 1
+Reciprocal space parameters
+Width of Gaussian (alpha) = 0.043865
+error flag = 0 (no error), eflag = 0
+
+Fitted charges ordered as within the cube file
+Charge 1 of type 29 = 0.801538
+Charge 2 of type 29 = 0.827098
+Charge 3 of type 6 = -0.112092
+Charge 4 of type 6 = 0.218783
+Charge 5 of type 6 = 0.243544
+Charge 6 of type 6 = -0.092241
+Charge 7 of type 6 = 0.231416
+Charge 8 of type 6 = 0.230924
+Charge 9 of type 6 = 0.218777
+Charge 10 of type 6 = 0.236115
+Charge 11 of type 6 = 0.026374
+Charge 12 of type 6 = 0.069336
+Charge 13 of type 9 = -0.244554
+Charge 14 of type 9 = -0.242268
+Charge 15 of type 9 = -0.248368
+Charge 16 of type 9 = -0.250387
+Charge 17 of type 9 = -0.241843
+Charge 18 of type 9 = -0.250722
+Charge 19 of type 1 = 0.061549
+Charge 20 of type 1 = 0.062776
+Charge 21 of type 1 = 0.064228
+Charge 22 of type 1 = 0.062129
+Charge 23 of type 1 = 0.062844
+Charge 24 of type 1 = 0.065139
+Charge 25 of type 6 = 0.813637
+Charge 26 of type 6 = -0.297290
+Charge 27 of type 8 = -0.542796
+Charge 28 of type 8 = -0.552585
+Charge 29 of type 6 = 0.866236
+Charge 30 of type 6 = -0.346562
+Charge 31 of type 8 = -0.550256
+Charge 32 of type 8 = -0.554132
+Charge 33 of type 6 = -0.170463
+Charge 34 of type 6 = -0.143950
+Charge 35 of type 6 = 0.207239
+Charge 36 of type 6 = -0.025963
+Charge 37 of type 6 = 0.020277
+Charge 38 of type 6 = 0.072055
+Charge 39 of type 6 = 0.042054
+Charge 40 of type 6 = -0.301089
+Charge 41 of type 6 = 0.271257
+Charge 42 of type 6 = -0.320806
+Charge 43 of type 6 = 0.275918
+Charge 44 of type 6 = 0.009065
+Charge 45 of type 6 = 0.000118
+Charge 46 of type 6 = -0.166397
+Charge 47 of type 6 = -0.150975
+Charge 48 of type 6 = 0.177120
+Charge 49 of type 9 = -0.189497
+Charge 50 of type 9 = -0.190955
+Charge 51 of type 9 = -0.124052
+Charge 52 of type 9 = -0.101436
+Charge 53 of type 1 = 0.173577
+Charge 54 of type 1 = 0.138751
+Charge 55 of type 1 = 0.134125
+Charge 56 of type 1 = 0.185408
+Charge 57 of type 1 = 0.138337
+Charge 58 of type 1 = 0.136150
+Charge 59 of type 6 = 0.518076
+Charge 60 of type 6 = -0.036600
+Charge 61 of type 8 = -0.456694
+Charge 62 of type 8 = -0.484360
+Charge 63 of type 6 = 0.516295
+Charge 64 of type 6 = -0.051509
+Charge 65 of type 8 = -0.442373
+Charge 66 of type 8 = -0.486468
+Charge 67 of type 6 = 0.312937
+Charge 68 of type 6 = -0.265425
+Charge 69 of type 6 = 0.313113
+Charge 70 of type 6 = -0.269249
+Charge 71 of type 6 = 0.009963
+Charge 72 of type 6 = 0.003950
+Charge 73 of type 6 = 0.201920
+Charge 74 of type 6 = 0.198297
+Charge 75 of type 9 = -0.159992
+Charge 76 of type 9 = -0.154814
+Charge 77 of type 1 = 0.211470
+Charge 78 of type 1 = 0.212624
+Charge 79 of type 7 = -0.206685
+Charge 80 of type 7 = -0.216689
+
+ESP Coulomb average = -1.343616e-16
+ESP QM average = 3.718966e-17
+Error of the potential = 0.191003
