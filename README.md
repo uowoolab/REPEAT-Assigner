@@ -81,6 +81,6 @@ $ python repeat_assigner.py path/to/MOFs/MOF3.cif --poscar vasp.poscar --repeat 
 ```
 
 ## Batch Assignment with Python
-Two python scripts are provided for batch assignments: if you want have `tqdm` installed and see a progress bar, use [batch_with_progress.py](./batch_with_progress.py), else use [batch_assignment.py](./batch_assignment.py). The two scripts works the same way otherwise.
+Two python scripts are provided for batch assignments: if you have `tqdm` installed and want to see a progress bar, use [batch_with_progress.py](./batch_with_progress.py), else use [batch_assignment.py](./batch_assignment.py). The two scripts works the same way otherwise.
 
 **IMPORTANT NOTE :** Please modify the `n_procs` (number of processes/threads), `src_path`, `dst_path` to the appropriate values before use.
