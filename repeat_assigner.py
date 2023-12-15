@@ -2,92 +2,138 @@ from collections import Counter
 from datetime import date
 from pathlib import Path
 from re import findall
+from shutil import move
+import warnings
 
+import numpy as np
 from pymatgen.io.cif import CifParser
 from pymatgen.io.vasp import Poscar
 
 
-def assign_repeat(cif_path, dst_path=None, poscar_name=None, repeat_name=None):
+def move_problematic(src_dir, dst_dir):
+    move(src_dir, dst_dir)
 
-    # Check existance of files
-    if not isinstance(cif_path, Path):
-        assert isinstance(
-            cif_path, str
-        ), f"Filename neither a String nor a pathlib.Path: {cif_path}"
-        cif_path = Path(cif_path)
 
+def assign_repeat(
+    cif_path, dst_path=None, problem_path=None, poscar_name=None, repeat_name=None
+):
     # Set defaults for arguments
     if dst_path is None:
         dst_path = cif_path.parent
     else:
         dst_path = Path(dst_path)
+    if problem_path is None:
+        print("Problematic folder is not set, therefore no folders will be moved.")
     if poscar_name is None:
         poscar_name = "POSCAR"
     if repeat_name is None:
         repeat_name = "repeat.output"
 
     # Check existance of POSCAR and REPEAT
-    assert cif_path.is_file(), f"File does not exist: {cif_path}"
+    cif_name = cif_path.stem
+    if not cif_path.is_file():
+        print(f"[{cif_name}] has no CIF")
+        if problem_path is not None:
+            move_problematic(cif_path.parent, problem_path)
     poscar_path = cif_path.parent.joinpath(poscar_name)
-    assert poscar_path.is_file(), f"File does not exist: {poscar_path}"
+    if not poscar_path.is_file():
+        print(f"[{cif_name}] has no POSCAR")
+        if problem_path is not None:
+            move_problematic(cif_path.parent, problem_path)
+        return
     repeat_path = cif_path.parent.joinpath(repeat_name)
-    assert repeat_path.is_file(), f"File does not exist: {repeat_path}"
+    if not repeat_path.is_file():
+        print(f"[{cif_name}] has no REPEAT output")
+        if problem_path is not None:
+            move_problematic(cif_path.parent, problem_path)
+        return
 
     # Parse CIF and POSCAR using pymatgen
-    cif_struct = CifParser(cif_path).get_structures(primitive=False)[0]
-    poscar_struct = Poscar.from_file(poscar_path).structure
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        try:
+            cif_struct = CifParser(cif_path).get_structures(primitive=False).pop()
+        except ValueError:
+            print(f"[{cif_name}] has empty CIF")
+            if problem_path is not None:
+                move_problematic(cif_path.parent, problem_path)
+            return
+        try:
+            poscar_struct = Poscar.from_file(poscar_path).structure
+        except ValueError:
+            print(f"[{cif_name}] has empty POSCAR")
+            if problem_path is not None:
+                move_problematic(cif_path.parent, problem_path)
+            return
 
     # A small function to compare floats within a certain tolerance
     def compare_float(a, b, tol=0.01):
         return abs(a - b) < (min(abs(a), abs(b)) * tol)
 
     # Compare cell vectors between CIF and POSCAR
-    assert all(
+    if not all(
         [
             compare_float(cif_struct.lattice.a, poscar_struct.lattice.a),
             compare_float(cif_struct.lattice.b, poscar_struct.lattice.b),
             compare_float(cif_struct.lattice.c, poscar_struct.lattice.c),
         ]
-    ), f"Cell vectors do not match: CIF vs POSCAR, {cif_path}"
+    ):
+        print(f"[{cif_name}] has different cell vectors in CIF and POSCAR")
+        if problem_path is not None:
+            move_problematic(cif_path.parent, problem_path)
+        return
 
     # Compare cell angles between CIF and POSCAR
-    assert all(
+    if not all(
         [
             compare_float(cif_struct.lattice.alpha, poscar_struct.lattice.alpha),
             compare_float(cif_struct.lattice.beta, poscar_struct.lattice.beta),
             compare_float(cif_struct.lattice.gamma, poscar_struct.lattice.gamma),
         ]
-    ), f"Cell angles do not match: CIF vs POSCAR, {cif_path}"
+    ):
+        print(f"[{cif_name}] has different cell angles in CIF and POSCAR")
+        if problem_path is not None:
+            move_problematic(cif_path.parent, problem_path)
+        return
 
     # Compare number of atoms between CIF and POSCAR
-    assert len(cif_struct) == len(
-        poscar_struct
-    ), f"Number of atoms do not match: CIF vs POSCAR, {cif_path}"
+    if len(cif_struct) != len(poscar_struct):
+        print(f"[{cif_name}] has different different number of atoms in CIF and POSCAR")
+        if problem_path is not None:
+            move_problematic(cif_path.parent, problem_path)
+        return
 
     # Get atomic symbols and fractional coordinates for all atoms
     symbols = [atom.specie.symbol for atom in poscar_struct]
-    frac_xyz = [atom.frac_coords for atom in poscar_struct]
+    frac_xyz = np.around([atom.frac_coords for atom in poscar_struct], decimals=6)
+    frac_xyz[frac_xyz == 0.0] = 0.0
 
     # Compare the numbers of each element between CIF and POSCAR
-    assert Counter([str(atom.specie) for atom in cif_struct]) == Counter(
-        symbols
-    ), f"Atom counts do not match: CIF vs POSCAR, {cif_path}"
+    if Counter([str(atom.specie) for atom in cif_struct]) != Counter(symbols):
+        print(f"[{cif_name}] has different different number of atoms in CIF and POSCAR")
+        if problem_path is not None:
+            move_problematic(cif_path.parent, problem_path)
+        return
 
     # Parse REPEAT file and compare number of atoms between POSCAR and REPEAT
     repeat_lines = findall(
         r"Charge [0-9]+ of type [0-9]+ = [0-9.-]+", repeat_path.read_text()
     )
-    assert len(repeat_lines) == len(
-        poscar_struct
-    ), f"Number of atoms do not match: POSCAR vs REPEAT, {cif_path}"
+    if len(repeat_lines) != len(poscar_struct):
+        print(f"[{cif_name}] has different number of atoms in POSCAR and REPEAT output")
+        if problem_path is not None:
+            move_problematic(cif_path.parent, problem_path)
+        return
 
     # While check the order of atoms, extract REPEAT charges
     repeat_charges = []
     for repeat_line, poscar_atom in zip(repeat_lines, poscar_struct):
         line_split = repeat_line.split()
-        assert (
-            int(line_split[4]) == poscar_atom.specie.Z
-        ), f"Order of atoms does not match: POSCAR vs REPEAT, {cif_path}"
+        if int(line_split[4]) != poscar_atom.specie.Z:
+            print(f"[{cif_name}] has different ordering in POSCAR and REPEAT output")
+            if problem_path is not None:
+                move_problematic(cif_path.parent, problem_path)
+            return
         repeat_charges.append(line_split[-1])
 
     # Reassign labels for all atoms

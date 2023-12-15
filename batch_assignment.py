@@ -6,10 +6,11 @@ from repeat_assigner import assign_repeat
 n_procs = 2
 src_path = Path("example_MOFs")
 dst_path = Path("assigned_MOFs")
+problem_path = Path("problematic_folder")
 
 
 def main(cif_path):
-    assign_repeat(cif_path, dst_path)
+    assign_repeat(cif_path, dst_path, problem_path)
 
 
 if __name__ == "__main__":
