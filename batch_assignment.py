@@ -3,10 +3,10 @@ from pathlib import Path
 
 from repeat_assigner import assign_repeat
 
-n_procs = 2
-src_path = Path("example_MOFs")
-dst_path = Path("assigned_MOFs")
-problem_path = Path("problematic_folder")
+n_procs = 4
+src_path = Path("src/path")
+dst_path = Path("dst/path")
+problem_path = Path("problem/path")
 
 
 def main(cif_path):
