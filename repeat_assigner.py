@@ -18,6 +18,8 @@ def assign_repeat(
     cif_path, dst_path=None, problem_path=None, poscar_name=None, repeat_name=None
 ):
     # Set defaults for arguments
+    if isinstance(cif_path, str):
+        cif_path = Path(cif_path)
     if dst_path is None:
         dst_path = cif_path.parent
     else:
