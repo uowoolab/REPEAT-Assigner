@@ -4,9 +4,9 @@ A robust code for assigning REPEAT outputs to MOFs. Different checks are impleme
 
 ## Prerequisites
 
-This code is tested with the following packages **(just use the latest version you can find)**:
-- Python 3.8+
-- pymatgen 2022+
+This code is tested in the following environment:
+- Python 3.12.8
+- pymatgen 2025.1.9
 
 ## Directory Structure
 

@@ -1,9 +1,9 @@
+import warnings
 from collections import Counter
 from datetime import date
 from pathlib import Path
 from re import findall
 from shutil import move
-import warnings
 
 import numpy as np
 from pymatgen.io.cif import CifParser
@@ -62,6 +62,11 @@ def assign_repeat(
             poscar_struct = Poscar.from_file(poscar_path).structure
         except ValueError:
             print(f"[{cif_name}] has empty POSCAR")
+            if problem_path is not None:
+                move_problematic(cif_path.parent, problem_path)
+            return
+        except IndexError:
+            print(f"[{cif_name}] has problem parsing POSCAR")
             if problem_path is not None:
                 move_problematic(cif_path.parent, problem_path)
             return
@@ -186,7 +191,8 @@ def assign_repeat(
         new_cif += "{:.6f}  {:.6f}  {:.6f}  ".format(*frac) + f"{charge}\n"
 
     # Write the new CIF
-    dst_path.joinpath(cif_path.name.replace(".cif", "_repeat.cif")).write_text(new_cif)
+    # dst_path.joinpath(cif_path.name.replace(".cif", "_repeat.cif")).write_text(new_cif)
+    dst_path.joinpath(cif_path.name).write_text(new_cif)
 
 
 if __name__ == "__main__":
